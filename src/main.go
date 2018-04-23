@@ -52,7 +52,7 @@ func main() {
 }
 
 func checker() {
-	fmt.Println("Polling for updates...")
+	fmt.Println("Polling for updates...\n")
 	// creates the in-cluster config
 	config, err := rest.InClusterConfig()
 	if err != nil {
@@ -81,11 +81,7 @@ func checker() {
 		}
 	}
 
-	if len(services) == 0 {
-		fmt.Printf("No Habitat services loaded")
-	} else {
-		fmt.Printf("Services: %+v", services)
-	}
+	fmt.Printf("%d services loaded\n", len(services))
 
 	for _, v := range services {
 		client := &http.Client{}
@@ -114,13 +110,13 @@ func checker() {
 				panic(err.Error())
 			}
 			if bldrRelease < svcRelease {
-				fmt.Printf("Newer version of %s available", v.Name)
+				fmt.Printf("Newer version of %s available\n", v.Name)
 				updateDeploymentImage(habclient, v.Deployment, bldrResp.Ident)
 			} else {
-				fmt.Printf("Latest version of %s installed", v.Name)
+				fmt.Printf("Latest version of %s installed\n", v.Name)
 			}
 		} else {
-			fmt.Printf("Release info empty, skipping")
+			fmt.Printf("Release info empty for %s, skipping\n", v.Name)
 		}
 	}
 }
