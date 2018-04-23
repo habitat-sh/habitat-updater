@@ -109,7 +109,7 @@ func checker() {
 			if err != nil {
 				panic(err.Error())
 			}
-			if bldrRelease < svcRelease {
+			if bldrRelease > svcRelease {
 				fmt.Printf("Newer version of %s available\n", v.Name)
 				updateDeploymentImage(habclient, v.Deployment, bldrResp.Ident)
 			} else {
