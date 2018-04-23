@@ -122,6 +122,12 @@
   version = "v0.6.1"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/jasonlvhit/gocron"
+  packages = ["."]
+  revision = "54194c9749d48b073c9aeb2c787b6882e95dd0cd"
+
+[[projects]]
   name = "github.com/json-iterator/go"
   packages = ["."]
   revision = "ca39e5af3ece67bbcda3d0f4f56a8e24d9f2dad4"
@@ -353,6 +359,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "a8e12faa7c27cc03acf89b6a64dc5db0d4c45134a0320e1ac3fa93956109dec4"
+  inputs-digest = "16db004e10ca9ff06dcdfde120e3ac097e83859ff8229ef180798677d214720d"
   solver-name = "gps-cdcl"
   solver-version = 1

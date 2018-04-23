@@ -7,9 +7,9 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"time"
 
 	habclient "github.com/habitat-sh/habitat-operator/pkg/client/clientset/versioned/typed/habitat/v1beta1"
+	"github.com/jasonlvhit/gocron"
 	"k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -47,12 +47,12 @@ type Ident struct {
 }
 
 func main() {
-	// Start once, then poll
-	_main()
-	poll(60*time.Second, _main)
+	gocron.Every(1).Minute().Do(checker)
+	<-gocron.Start()
 }
 
-func _main() {
+func checker() {
+	fmt.Println("Polling for updates...")
 	// creates the in-cluster config
 	config, err := rest.InClusterConfig()
 	if err != nil {
@@ -79,6 +79,12 @@ func _main() {
 		for k, v := range fetchSupInfo(pod.Status.PodIP, pod.GetLabels()["habitat-name"], services) {
 			services[k] = v
 		}
+	}
+
+	if len(services) == 0 {
+		fmt.Printf("No Habitat services loaded")
+	} else {
+		fmt.Printf("Services: %+v", services)
 	}
 
 	for _, v := range services {
@@ -113,6 +119,8 @@ func _main() {
 			} else {
 				fmt.Printf("Latest version of %s installed", v.Name)
 			}
+		} else {
+			fmt.Printf("Release info empty, skipping")
 		}
 	}
 }
@@ -151,11 +159,5 @@ func updateDeploymentImage(client *habclient.HabitatV1beta1Client, deployment st
 	_, err = client.Habitats(v1.NamespaceDefault).Update(service)
 	if err != nil {
 		panic(err.Error())
-	}
-}
-
-func poll(d time.Duration, f func()) {
-	for range time.Tick(d) {
-		f()
 	}
 }
