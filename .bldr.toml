@@ -1,0 +1,5 @@
+[habitat-updater]
+plan_path = "habitat"          # automatically checks every file inside the 'sup' directory
+paths = [
+  "src/*",                 # matches any file with a single character file name inside the 'sup' directory
+]

@@ -5,7 +5,7 @@ metadata:
 customVersion: v1beta2
 spec:
   v1beta2:
-    image: libsysguy/habitat-updater:0.0.1-20180423205849
+    image: habitat/habitat-updater
     count: 1
     service:
       name: habitat-updater
