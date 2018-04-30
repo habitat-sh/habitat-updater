@@ -1,5 +1,5 @@
-pkg_name="habitat-updater"
-pkg_origin="habitat"
+pkg_name=habitat-updater
+pkg_origin=habitat
 pkg_version=0.0.1
 pkg_description="A service that checks for Habitat package updates inside a Kubernetes cluster"
 pkg_upstream_url="https://github.com/habitat-sh/habitat-updater"

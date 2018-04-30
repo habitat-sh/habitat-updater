@@ -47,7 +47,7 @@ type Ident struct {
 }
 
 func main() {
-	gocron.Every(15).Seconds().Do(checker)
+	gocron.Every(1).Minute().Do(checker)
 	<-gocron.Start()
 }
 
