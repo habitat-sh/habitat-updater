@@ -102,6 +102,8 @@ func checker() {
 			log.Fatal(err)
 		}
 		json.Unmarshal(responseData, &bldrResp)
+		fmt.Printf("Builder_RESP: %+v\n\n", bldrResp)
+		fmt.Printf("IDENT INFO: %+v\n\n", v)
 		if bldrResp.Ident.Release != "" && v.Release != "" {
 			bldrRelease, err := strconv.Atoi(bldrResp.Ident.Release)
 			if err != nil {
