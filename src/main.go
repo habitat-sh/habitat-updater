@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	habclient "github.com/habitat-sh/habitat-operator/pkg/client/clientset/versioned/typed/habitat/v1beta1"
 	"github.com/jasonlvhit/gocron"
@@ -102,8 +103,6 @@ func checker() {
 			log.Fatal(err)
 		}
 		json.Unmarshal(responseData, &bldrResp)
-		fmt.Printf("Builder_RESP: %+v\n\n", bldrResp)
-		fmt.Printf("IDENT INFO: %+v\n\n", v)
 		if bldrResp.Ident.Release != "" && v.Release != "" {
 			bldrRelease, err := strconv.Atoi(bldrResp.Ident.Release)
 			if err != nil {
@@ -154,8 +153,10 @@ func updateDeploymentImage(client *habclient.HabitatV1beta1Client, deployment st
 	if err != nil {
 		panic(err.Error())
 	}
-	service.Spec.Image = fmt.Sprintf("%s/%s:%s-%s", newMetadata.Origin, newMetadata.Name, newMetadata.Version, newMetadata.Release)
-	service.Spec.V1beta2.Image = fmt.Sprintf("%s/%s:%s-%s", newMetadata.Origin, newMetadata.Name, newMetadata.Version, newMetadata.Release)
+	dockerIdent := strings.Split(service.Spec.Image, ":")
+	dockerIdentBeta2 := strings.Split(service.Spec.V1beta2.Image, ":")
+	service.Spec.Image = fmt.Sprintf("%s:%s-%s", dockerIdent[0], newMetadata.Version, newMetadata.Release)
+	service.Spec.V1beta2.Image = fmt.Sprintf("%s:%s-%s", dockerIdentBeta2[0], newMetadata.Version, newMetadata.Release)
 
 	_, err = client.Habitats(v1.NamespaceDefault).Update(service)
 	if err != nil {
