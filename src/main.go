@@ -22,10 +22,12 @@ type habPkg struct {
 	Version    string
 	Release    string
 	Deployment string
+	Channel    string
 }
 
 type Service struct {
-	Pkg Pkg `json:"pkg"`
+	Channel string `json:"channel"`
+	Pkg     Pkg    `json:"pkg"`
 }
 type Pkg struct {
 	Ident   string `json:"ident"`
@@ -86,7 +88,7 @@ func checker() {
 	for _, v := range services {
 		client := &http.Client{}
 		var bldrResp = BldrChannel{}
-		req, err := http.NewRequest("GET", fmt.Sprintf("https://bldr.habitat.sh/v1/depot/channels/%s/stable/pkgs/%s/latest", v.Origin, v.Name), nil)
+		req, err := http.NewRequest("GET", fmt.Sprintf("https://bldr.habitat.sh/v1/depot/channels/%s/%s/pkgs/%s/latest", v.Origin, v.Channel, v.Name), nil)
 		if err != nil {
 			panic(err.Error())
 		}
@@ -139,6 +141,7 @@ func fetchSupInfo(ip string, deployment string, services map[string]habPkg) map[
 			Version:    svc.Pkg.Version,
 			Release:    svc.Pkg.Release,
 			Deployment: deployment,
+			Channel:    svc.Channel,
 		}
 	}
 	return services
