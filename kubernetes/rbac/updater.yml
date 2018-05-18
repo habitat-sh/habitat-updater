@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: habitat-updater
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: habitat-updater
+    spec:
+      containers:
+      - name: habitat-updater
+        image: habitat/habitat-updater
+      serviceAccountName: habitat-updater
