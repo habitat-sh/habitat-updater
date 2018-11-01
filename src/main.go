@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"os"
 
 	habclient "github.com/habitat-sh/habitat-operator/pkg/client/clientset/versioned/typed/habitat/v1beta1"
 	"github.com/jasonlvhit/gocron"
@@ -55,6 +56,7 @@ func main() {
 }
 
 func checker() {
+
 	fmt.Println("Polling for updates...\n")
 	// creates the in-cluster config
 	config, err := rest.InClusterConfig()
@@ -94,6 +96,16 @@ func checker() {
 			panic(err.Error())
 		}
 		req.Header.Set("User-Agent", "Kubernetes-Updater-9000")
+
+		// Add in authorization header if the HAB_AUTH_TOKEN has been set 
+		// as an environment variable
+		hab_auth_token, env_var_exists := os.LookupEnv("HAB_AUTH_TOKEN")
+		if env_var_exists && hab_auth_token != "" {
+			fmt.Printf("Setting Authorization Header\n")
+			var auth_content = fmt.Sprintf("Bearer %s", hab_auth_token)
+			req.Header.Set("Authorization", auth_content)
+		}
+
 		resp, err := client.Do(req)
 		if err != nil {
 			panic(err.Error())
@@ -103,6 +115,10 @@ func checker() {
 			log.Fatal(err)
 		}
 		json.Unmarshal(responseData, &bldrResp)
+
+		fmt.Printf("Depot version on channel '%s': %s\n", v.Channel, bldrResp.Ident.Release)
+		fmt.Printf("Cluster version: %s\n", v.Release)
+
 		if bldrResp.Ident.Release != "" && v.Release != "" {
 			bldrRelease, err := strconv.Atoi(bldrResp.Ident.Release)
 			if err != nil {
