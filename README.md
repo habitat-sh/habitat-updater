@@ -1,3 +1,8 @@
+# Archived Repository
+This repository has been archived and will no longer receive updates. 
+It was archived as part of the [Repository Standardization Initiative](https://github.com/chef-boneyard/oss-repo-standardization-2025).
+If you are a Chef customer and need support for this repository, please contact your Chef account team.
+ 
 # Habitat Updater: A service for syncing package update with kubernetes managed habitat services
 
 Habitat updater is a service that runs inside of a k8's cluster to watch for changes in pods running Habitat services and reconcile any updates from Habitat Builder. It does this by querying the k8's pods api for anything with a `habitat=true` label. Then it queries the supervisors running in those pods for what services they are running. Once it has a list of services, it asks builder for the most recent version of those packages in the stable channel. 
